@@ -34,7 +34,7 @@ function MainForm({ apiResuls,setApiResults, setComment, comment, setSentiment }
       setProgress(10);
       const videoLink = youtubeLink;
       const videoID = getYouTubeVideoID(videoLink);
-      const res  = await axios.get(`http://localhost:3000/api/comments/${videoID}`);
+      const res  = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/comments/${videoID}`);
       console.log(`Status: ${res.status}`); 
       console.log("Body: ", res.data);
       if (res.status === 200) {
@@ -53,7 +53,7 @@ function MainForm({ apiResuls,setApiResults, setComment, comment, setSentiment }
       setStatus("Seperating Malayalam Comments");
       setProgress(40);
       
-      const res = await axios.post("http://localhost:3000/api/classify", data);
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/classify`, data);
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
       if (res.status === 200) {
@@ -71,7 +71,7 @@ function MainForm({ apiResuls,setApiResults, setComment, comment, setSentiment }
       setStatus("Translating Comments");
       setProgress(70);
 
-      const res = await axios.post("http://localhost:3000/api/translate", data);
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/translate`, data);
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
       if (res.status === 200) {
@@ -91,7 +91,7 @@ function MainForm({ apiResuls,setApiResults, setComment, comment, setSentiment }
       );
       setProgress(90);
 
-      const res = await axios.post("http://localhost:3000/api/sentiment", data);
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/sentiment`, data);
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
       if (res.status === 200) {
