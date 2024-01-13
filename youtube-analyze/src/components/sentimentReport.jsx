@@ -17,7 +17,7 @@ function SentimentReport({ sentiment }) {
   return (
     <div className="mt-5 ml-1">
       {sentiment && sentiment.length > 0 ? (
-        <Card className="w-auto rounded-md">
+        <Card className="w-auto rounded-md border-2 border-slate-500">
           <CardHeader>
             <h1 className="text-2xl">Sentiment Report</h1>
           </CardHeader>
@@ -26,7 +26,7 @@ function SentimentReport({ sentiment }) {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Badge
-                  className="my-0 mx-auto px-14 "
+                  className="my-0 mx-auto px-14 border-2 border-slate-500 "
                   style={{
                     backgroundColor:
                       emotionColors[sentiment[0].label] || "#84cc16",
@@ -39,7 +39,7 @@ function SentimentReport({ sentiment }) {
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Badge
-                  className="my-0 mx-auto px-14"
+                  className="my-0 mx-auto px-14 border-2 border-slate-500"
                   style={{
                     backgroundColor:
                       emotionColors[sentiment[1].label] || "#84cc16",
@@ -53,7 +53,7 @@ function SentimentReport({ sentiment }) {
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Badge
-                  className="my-0 mx-auto px-14"
+                  className="my-0 mx-auto px-14 border-2 border-slate-500"
                   style={{
                     backgroundColor:
                       emotionColors[sentiment[2].label] || "#84cc16",

@@ -25,7 +25,7 @@ function TopComments({ comment }) {
           (commentObject, index) =>
             commentObject.language !== "en" && (
               <Card
-                className="flex flex-col justify-between m-1"
+                className="flex flex-col justify-between m-1 border-2 border-slate-500"
                 key={index + 1}
               >
                 <CardContent className="m-5 p-1/12">
