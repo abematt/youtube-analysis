@@ -11,17 +11,23 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 
-function MainForm({ apiResuls,setApiResults, setComment, comment, setSentiment }) {
+function MainForm({
+  apiResuls,
+  setApiResults,
+  setComment,
+  comment,
+  setSentiment,
+}) {
   const [youtubeLink, setYoutubeLink] = useState("");
   const [status, setStatus] = useState("");
   const [progress, setProgress] = useState(0);
 
-  
   function getYouTubeVideoID(url) {
     const regex =
       /(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regex);
     if (match && match[2].length == 11) {
+      console.log("matching");
       return match[2];
     } else {
       return "error";
@@ -34,8 +40,17 @@ function MainForm({ apiResuls,setApiResults, setComment, comment, setSentiment }
       setProgress(10);
       const videoLink = youtubeLink;
       const videoID = getYouTubeVideoID(videoLink);
-      const res  = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/comments/${videoID}`);
-      console.log(`Status: ${res.status}`); 
+
+      if (videoID === "error") {
+        setStatus("Invalid Youtube Link");
+        setProgress(0);
+        return "Error";
+      }
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/comments/${videoID}`
+      );
+      console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
       if (res.status === 200) {
         let text = res.data.slice(0, 10);
@@ -52,8 +67,11 @@ function MainForm({ apiResuls,setApiResults, setComment, comment, setSentiment }
     try {
       setStatus("Seperating Malayalam Comments");
       setProgress(40);
-      
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/classify`, data);
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/classify`,
+        data
+      );
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
       if (res.status === 200) {
@@ -65,13 +83,16 @@ function MainForm({ apiResuls,setApiResults, setComment, comment, setSentiment }
     }
   }
 
-  // Translate Comments through HuggingFace API through Express 
+  // Translate Comments through HuggingFace API through Express
   async function translateComments(data) {
     try {
       setStatus("Translating Comments");
       setProgress(70);
 
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/translate`, data);
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/translate`,
+        data
+      );
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
       if (res.status === 200) {
@@ -86,12 +107,13 @@ function MainForm({ apiResuls,setApiResults, setComment, comment, setSentiment }
   // Analyze Sentiment of Comments through HuggingFace API through Express
   async function sentimentComments(data) {
     try {
-      setStatus(
-        "Analyzing Sentiment"
-      );
+      setStatus("Analyzing Sentiment");
       setProgress(90);
 
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/sentiment`, data);
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/sentiment`,
+        data
+      );
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
       if (res.status === 200) {
@@ -102,7 +124,6 @@ function MainForm({ apiResuls,setApiResults, setComment, comment, setSentiment }
       console.log(error);
     }
   }
-
 
   const getYoutubeComments = async () => {
     console.log("hi i'm here with a click");
@@ -117,12 +138,17 @@ function MainForm({ apiResuls,setApiResults, setComment, comment, setSentiment }
     // const youtubeResult = await getYoutubeInfo(videoID);
     // let text = youtubeResult.slice(0, 10);
     // setApiResults(text);
-    
-    let comments = await getComments(youtubeLink);
-    console.log(comments)
-    let classifiedComments = await classifyComments(comments);
-    let translatedComments = await translateComments(classifiedComments);
-    let sentiment = await sentimentComments(translatedComments);
+
+    let youtubeApiResult = await getComments(youtubeLink);
+    console.log(youtubeApiResult);
+    if (youtubeApiResult === "Error") {
+      console.log("Invalid Link");
+    } else {
+      let classifiedComments = await classifyComments(youtubeApiResult);
+      let translatedComments = await translateComments(classifiedComments);
+      let sentiment = await sentimentComments(translatedComments);
+    }
+
     // await translateComments(comment);
     // await sentimentComments(comment);
 
@@ -155,15 +181,23 @@ function MainForm({ apiResuls,setApiResults, setComment, comment, setSentiment }
     <div className="px-80">
       <Card>
         <CardHeader className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-black">
-          <CardTitle>Youtube Analyzer</CardTitle>
-          <CardDescription>
-            Get a full analysis of youtube video that isn't in your language
+          <CardTitle className="text-white">Youtube Analyzer</CardTitle>
+          <CardDescription className="text-white">
+            <p>
+              Translate and Analyze Sentiment of Youtube (Malayalam) Comments
+            </p>
+            <a
+              className="text-black"
+              href="https://www.youtube.com/results?search_query=malayalam"
+            >
+              Click here for list of Malayalam videos to try
+            </a>
           </CardDescription>
         </CardHeader>
         <CardContent className="mt-8">
           <form>
             <div className="grid w-full items-center gap-4">
-              <label htmlFor="video-link">Video Link</label>
+              {/* <label htmlFor="video-link">Past Link Below</label> */}
               <Input
                 onChange={(e) => setYoutubeLink(e.target.value)}
                 placeholder="Enter youtube video link"
