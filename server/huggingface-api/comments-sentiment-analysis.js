@@ -1,9 +1,11 @@
-import { HfInference } from "@huggingface/inference";
+const { HfInference } = require("@huggingface/inference");
+require("dotenv").config();
 
-export const huggingSentiment = async (translatedText) => {
+const huggingSentiment = async (translatedText) => {
+  const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
   const sentences = [];
-  
-  console.log("Right before sentment",translatedText)
+
+  console.log("Right before sentment", translatedText);
 
   for (const element of translatedText) {
     if (element.language != "en") {
@@ -19,3 +21,5 @@ export const huggingSentiment = async (translatedText) => {
 
   return sentimentClassification;
 };
+
+module.exports = { huggingSentiment };

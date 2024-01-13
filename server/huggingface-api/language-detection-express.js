@@ -1,4 +1,5 @@
-import { HfInference } from "@huggingface/inference";
+require('dotenv').config();
+const { HfInference } = require("@huggingface/inference");
 
 function removeEmojis(string) {
   return string.replace(
@@ -7,24 +8,25 @@ function removeEmojis(string) {
   );
 }
 
-export const huggingLanguageClassification = async (rawText) => {
-  console.log("i'm here")
+const huggingLanguageClassification = async (rawText) => {
+  console.log("i'm here");
   const classifications = [];
+  const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
 
   for (const element of rawText) {
-    // console.log(element);
-    const elementWithoutEmoji = removeEmojis(element);
-    // console.log(elementWithoutEmoji);
-    // console.log(elementWithoutEmoji)
+    const elementWithoutEmoji = removeEmojis(element.textDisplay);
+    console.log("before classification");
     const classification = await hf.textClassification({
       model: "papluca/xlm-roberta-base-language-detection",
       inputs: elementWithoutEmoji,
     });
     classifications.push({
-      text: element,
+      text: element.textDisplay,
       language: classification[0].label,
+      likes: element.likeCount,
     });
   }
   return classifications;
-  
 };
+
+module.exports = { huggingLanguageClassification };

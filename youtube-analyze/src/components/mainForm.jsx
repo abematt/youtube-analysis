@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,38 +9,151 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
 
-import { getYoutubeInfo } from "../lib/youtube-api";
-import { huggingTranslate } from "../lib/hugging-translate";
-import { huggingLanguageClassification } from "../lib/language-detection";
-import { huggingSentiment } from "../lib/sentiment-detection";
-
-function MainForm({ setApiResults, setComment, comment }) {
+function MainForm({ apiResuls,setApiResults, setComment, comment, setSentiment }) {
   const [youtubeLink, setYoutubeLink] = useState("");
+  const [status, setStatus] = useState("");
+  const [progress, setProgress] = useState(0);
+
+  
+  function getYouTubeVideoID(url) {
+    const regex =
+      /(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regex);
+    if (match && match[2].length == 11) {
+      return match[2];
+    } else {
+      return "error";
+    }
+  }
+
+  async function getComments(youtubeLink) {
+    try {
+      setStatus("Fetching Comments");
+      setProgress(10);
+      const videoLink = youtubeLink;
+      const videoID = getYouTubeVideoID(videoLink);
+      const res  = await axios.get(`http://localhost:3000/api/comments/${videoID}`);
+      console.log(`Status: ${res.status}`); 
+      console.log("Body: ", res.data);
+      if (res.status === 200) {
+        let text = res.data.slice(0, 10);
+        setApiResults(text);
+        return text;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Classify Comments using Hugging Face API through Express
+  async function classifyComments(data) {
+    try {
+      setStatus("Seperating Malayalam Comments");
+      setProgress(40);
+      
+      const res = await axios.post("http://localhost:3000/api/classify", data);
+      console.log(`Status: ${res.status}`);
+      console.log("Body: ", res.data);
+      if (res.status === 200) {
+        setComment(res.data);
+        return res.data;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Translate Comments through HuggingFace API through Express 
+  async function translateComments(data) {
+    try {
+      setStatus("Translating Comments");
+      setProgress(70);
+
+      const res = await axios.post("http://localhost:3000/api/translate", data);
+      console.log(`Status: ${res.status}`);
+      console.log("Body: ", res.data);
+      if (res.status === 200) {
+        setComment(res.data);
+        return res.data;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Analyze Sentiment of Comments through HuggingFace API through Express
+  async function sentimentComments(data) {
+    try {
+      setStatus(
+        "Analyzing Sentiment"
+      );
+      setProgress(90);
+
+      const res = await axios.post("http://localhost:3000/api/sentiment", data);
+      console.log(`Status: ${res.status}`);
+      console.log("Body: ", res.data);
+      if (res.status === 200) {
+        setSentiment(res.data);
+        return res.data;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   const getYoutubeComments = async () => {
-    console.log("hi i'm here with a click")
-    const videoLink = youtubeLink;
-    const youtubeResult = await getYoutubeInfo(videoLink);
-    let text = youtubeResult.slice(0, 10);
-    setApiResults(text);
+    console.log("hi i'm here with a click");
+    setComment("");
+    setSentiment("");
 
-    // Classifiying Comments
-    let classifcation = await huggingLanguageClassification(text);
-    setComment(classifcation);
-    console.log(classifcation)
-    console.log("hi i'm under classification")
-    // Translating Comments
-    const translatedCommentsList = await huggingTranslate(classifcation);
-    setComment(translatedCommentsList);
-    // console.log(classifcation);
+    // Getting Youtube Comments
+    // setStatus("Fetching Comments");
+    // setProgress(10);
+    // const videoLink = youtubeLink;
+    // const videoID = getYouTubeVideoID(videoLink);
+    // const youtubeResult = await getYoutubeInfo(videoID);
+    // let text = youtubeResult.slice(0, 10);
+    // setApiResults(text);
+    
+    let comments = await getComments(youtubeLink);
+    console.log(comments)
+    let classifiedComments = await classifyComments(comments);
+    let translatedComments = await translateComments(classifiedComments);
+    let sentiment = await sentimentComments(translatedComments);
+    // await translateComments(comment);
+    // await sentimentComments(comment);
 
-    const videoSentiment = await huggingSentiment(translatedCommentsList);
-    console.log(videoSentiment )
+    // // Classifiying Comments
+    // setStatus("Seperating Malayalam Comments");
+    // setProgress(40);
+    // let classifcation = await huggingLanguageClassification(text);
+    // setComment(classifcation);
+    // console.log("hi i'm under classification");
+
+    // // Translating Comments
+    // setStatus("Translating Comments");
+    // setProgress(70);
+    // const translatedCommentsList = await huggingTranslate(classifcation);
+    // setComment(translatedCommentsList);
+    // // console.log(classifcation);
+
+    // // Sentiment Analysis of Comments
+    // setProgress(90);
+    // setStatus(
+    //   "Analyzing Sentiment based on both English and Malayalam Comments"
+    // );
+    // const videoSentiment = await huggingSentiment(translatedCommentsList);
+    // setSentiment(videoSentiment);
+    // setProgress(100);
+    // setStatus("Done!");
   };
+
   return (
-    <>
-      <Card className="w-[350px] h-[350px]">
+    <div className="px-80">
+      <Card>
         <CardHeader className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-black">
           <CardTitle>Youtube Analyzer</CardTitle>
           <CardDescription>
@@ -66,10 +178,11 @@ function MainForm({ setApiResults, setComment, comment }) {
                 Get Analysis
               </Button>
             </div>
+            <div>{status}</div>
           </form>
         </CardContent>
       </Card>
-    </>
+    </div>
   );
 }
 

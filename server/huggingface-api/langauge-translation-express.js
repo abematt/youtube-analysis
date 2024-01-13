@@ -1,10 +1,13 @@
-import { HfInference } from "@huggingface/inference";
+const { HfInference } = require("@huggingface/inference");
+require('dotenv').config();
 
-export const huggingTranslate = async (rawText) => {
+const huggingTranslate = async (rawText) => {
   const translated = [];
+  const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
 
   for (const element of rawText) {
-    console.log(element)
+    console.log("Inside the translation function");
+    console.log(element);
     // console.log(element.langauge);
     if (element.language == "en") {
       translated.push(element);
@@ -19,11 +22,14 @@ export const huggingTranslate = async (rawText) => {
       });
       console.log(translationResponse);
       translated.push({
-        langauge : element.language,
-        text : element.text,
-        translatedText : translationResponse.translation_text,
+        langauge: element.language,
+        text: element.text,
+        translatedText: translationResponse.translation_text,
+        likes: element.likes,
       });
     }
   }
   return translated;
 };
+
+module.exports = { huggingTranslate };

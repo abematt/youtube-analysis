@@ -1,5 +1,6 @@
 const {listModels} = require('@huggingface/hub')
 
+const token = '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'
 
 async function isModelInferenceEnabled(modelName) {
     const response = await fetch(`https://api-inference.huggingface.co/status/${modelName}`)
