@@ -8,8 +8,8 @@ This app was created to explore various technologies and frameworks. The followi
 
 - **Vite** [https://vitejs.dev/] as a development server/bundler
 - **shdcn/ui** [https://ui.shadcn.com/] for component styling
-- Google's Developer API [https://developers.google.com/youtube/v3] for fetching YouTube comments
-- **Huggingface.js** for accessing inference APIs for LLM models
+- **Google's Developer API** [https://developers.google.com/youtube/v3] for fetching YouTube comments
+- **Huggingface.js** [https://huggingface.co/docs/huggingface.js/index] for accessing inference APIs for LLM models
 
 ## Basic Pipeline
 
