@@ -36,6 +36,13 @@ function MainForm({
   }
 
   async function getComments(youtubeLink) {
+    let timeoutId = setTimeout(() => {
+      setStatus("This might take a few seconds more");
+    }, 5000); // set timeout to 10 seconds
+
+    let timeoutId2 = setTimeout(() => {
+      setStatus("Phew!, That's a lot of comments");
+    }, 10000); // set timeout to 10 seconds
     try {
       setStatus("Fetching Comments");
       setProgress(10);
@@ -48,20 +55,12 @@ function MainForm({
         return "Error";
       }
 
-      let timeoutId = setTimeout(() => {
-        setStatus("This might take a few seconds more");
-      }, 5000); // set timeout to 10 seconds
-
-      let timeoutId2 = setTimeout(() => {
-        setStatus("Phew!, That's a lot of comments");
-      }, 10000); // set timeout to 10 seconds
-
       const res = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/comments/${videoID}`
       );
 
-      clearTimeout(timeoutId)
-      clearTimeout(timeoutId2)
+      clearTimeout(timeoutId);
+      clearTimeout(timeoutId2);
 
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
@@ -71,26 +70,28 @@ function MainForm({
         return text;
       }
     } catch (error) {
+      clearTimeout(timeoutId);
+      clearTimeout(timeoutId2);
+
       setStatus("Youtube Comment Fetching Failed, Please Try Again!");
     }
   }
 
   // Classify Comments using Hugging Face API through Express
   async function classifyComments(data) {
+    let timeoutId = setTimeout(() => {
+      setStatus("Did you know Malayalam is believed to be 800 years old");
+    }, 5000); // set timeout to 5 seconds
     try {
       setStatus("Seperating Malayalam Comments");
       setProgress(40);
-      
-      let timeoutId = setTimeout(() => {
-        setStatus("Did you know Malayalam is believed to be 800 years old");
-      }, 5000); // set timeout to 5 seconds
 
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/classify`,
         data
       );
 
-      clearTimeout(timeoutId)
+      clearTimeout(timeoutId);
 
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
@@ -99,26 +100,26 @@ function MainForm({
         return res.data;
       }
     } catch (error) {
+      clearTimeout(timeoutId);
       setStatus("Language Classification Failed, Please Try Again!");
     }
   }
 
   // Translate Comments through HuggingFace API through Express
   async function translateComments(data) {
+    let timeoutId = setTimeout(() => {
+      setStatus("Translation is hard, Please wait till i find my dictionary");
+    }, 5000); // set timeout to 5 seconds
     try {
       setStatus("Translating Comments");
       setProgress(70);
-
-      let timeoutId = setTimeout(() => {
-        setStatus("Translation is hard, Please wait till i find my dictionary");
-      }, 5000); // set timeout to 5 seconds
 
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/translate`,
         data
       );
 
-      clearTimeout(timeoutId)
+      clearTimeout(timeoutId);
 
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
@@ -127,25 +128,25 @@ function MainForm({
         return res.data;
       }
     } catch (error) {
+      clearTimeout(timeoutId);
       setStatus("Translation Failed, Please Try Again!");
     }
   }
 
   // Analyze Sentiment of Comments through HuggingFace API through Express
   async function sentimentComments(data) {
+    let timeoutId = setTimeout(() => {
+      setStatus("There's some emotions here that's for sure");
+    }, 5000); // set timeout to 5 seconds
     try {
       setStatus("Analyzing Sentiment");
       setProgress(90);
-      
-      let timeoutId = setTimeout(() => {
-        setStatus("There's some emotions here that's for sure");
-      }, 5000); // set timeout to 5 seconds
 
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/sentiment`,
         data
       );
-      clearTimeout(timeoutId)
+      clearTimeout(timeoutId);
 
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
@@ -155,6 +156,7 @@ function MainForm({
         return res.data;
       }
     } catch (error) {
+      clearTimeout(timeoutId);
       setStatus("Sentiment Analysis Failed, Please Try Again!");
     }
   }
@@ -223,6 +225,8 @@ function MainForm({
             <a
               className="text-black"
               href="https://www.youtube.com/results?search_query=malayalam"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Click here for list of Malayalam videos to try
             </a>

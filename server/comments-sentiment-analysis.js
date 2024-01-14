@@ -2,10 +2,10 @@ const { HfInference } = require("@huggingface/inference");
 require("dotenv").config();
 
 const huggingSentiment = async (translatedText) => {
+  console.log("Comment Sentiment Analysis");
+  console.log("Data for Sentiment Analysis", translatedText)
   const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
   const sentences = [];
-
-  console.log("Right before sentment", translatedText);
 
   for (const element of translatedText) {
     if (element.language != "en") {
@@ -15,7 +15,6 @@ const huggingSentiment = async (translatedText) => {
       sentences.push(element.text);
     }
   }
-  console.log(sentences);
 
   const sentimentClassification = await hf.textClassification({
     model: "SamLowe/roberta-base-go_emotions",

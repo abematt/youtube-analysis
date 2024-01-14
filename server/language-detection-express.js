@@ -9,13 +9,18 @@ function removeEmojis(string) {
 }
 
 const huggingLanguageClassification = async (rawText) => {
-  console.log("i'm here");
+  console.log("Comment Classification");
+  console.log("Data for Classification", rawText)
   const classifications = [];
   const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
 
   for (const element of rawText) {
+    console.log("Comment",element)
     const elementWithoutEmoji = removeEmojis(element.textDisplay);
-    console.log("before classification");
+    if (!elementWithoutEmoji) {
+      continue;
+    }
+    
     const classification = await hf.textClassification({
       model: "papluca/xlm-roberta-base-language-detection",
       inputs: elementWithoutEmoji,

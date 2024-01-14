@@ -2,12 +2,12 @@ const { HfInference } = require("@huggingface/inference");
 require('dotenv').config();
 
 const huggingTranslate = async (rawText) => {
+  console.log("Comment Translation")
+  console.log("Data for Translation", rawText)
   const translated = [];
   const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
 
   for (const element of rawText) {
-    console.log("Inside the translation function");
-    console.log(element);
     // console.log(element.langauge);
     if (element.language == "en") {
       translated.push(element);
@@ -20,7 +20,6 @@ const huggingTranslate = async (rawText) => {
           tgt_lang: "en_XX",
         },
       });
-      console.log(translationResponse);
       translated.push({
         langauge: element.language,
         text: element.text,
