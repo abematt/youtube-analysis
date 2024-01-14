@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/hover-card";
 import * as React from "react";
 import { ChevronsUpDown, Plus, X } from "lucide-react";
+import { ThumbsUp } from "lucide-react";
 
 function TopComments({ comment }) {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -24,7 +25,7 @@ function TopComments({ comment }) {
       {Array.isArray(comment) &&
         comment.map((commentObject, index) => (
           <Card
-            className="flex flex-col w-1/2 justify-between m-1 border-2 border-slate-500 lg:w-1/4"
+            className="flex flex-col w-1/2 justify-between m-1 border-2 border-slate-500 lg:w-36"
             key={index + 1}
           >
             <CardContent className="m-5 p-1/12">
@@ -36,15 +37,15 @@ function TopComments({ comment }) {
               </CardDescription>
               <CardFooter className="flex justify-center gap-1 text-xs pb-1 mt-3">
                 <Badge
-                  className="w-auto cursor-default"
+                  className="w-full h-auto cursor-default"
                   style={{ backgroundColor: "#fcd34d", color: "black" }}
                 >
-                  {commentObject.likes} Likes
+                 <ThumbsUp className="w-3 h-3" /> {commentObject.likes} 
                 </Badge>
                 <HoverCard>
                   <HoverCardTrigger>
                     <Badge
-                      className="w-auto cursor-pointer"
+                      className="w-auto ml-2 cursor-pointer lg:ml-0"
                       style={{ backgroundColor: "#84cc16", color: "black" }}
                     >
                       {commentObject.translatedText ? 'Translated' : 'Original'}
