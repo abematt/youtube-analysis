@@ -12,7 +12,7 @@ function App() {
   const [sentiment, setSentiment] = useState("");
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col py-4">
       <MainForm
         apiResults={apiResults}
         setApiResults={setApiResults}
@@ -20,7 +20,7 @@ function App() {
         comment={comment}
         setSentiment={setSentiment}
       />
-      <div className="flex flex-row justify-center">
+      <div className="flex flex-col justify-center lg:flex lg:flex-row lg:flex-wrap">
         <TopComments comment={comment} />
         <SentimentReport sentiment={sentiment} />
       </div>

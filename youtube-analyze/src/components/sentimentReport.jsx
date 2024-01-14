@@ -15,7 +15,7 @@ import { emotionColors } from "../lib/emotionColors";
 
 function SentimentReport({ sentiment }) {
   return (
-    <div className="mt-5 ml-1">
+    <div className="mt-5">
       {sentiment && sentiment.length > 0 ? (
         <Card className="w-auto rounded-md border-2 border-slate-500">
           <CardHeader>

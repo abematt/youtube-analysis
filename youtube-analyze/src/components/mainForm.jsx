@@ -178,7 +178,7 @@ function MainForm({
   };
 
   return (
-    <div className="px-80">
+    <div className="w-9/12 mx-auto lg:w-5/12">
       <Card className="border-2 border-slate-500">
         <CardHeader className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-black">
           <CardTitle className="text-white">Youtube Analyzer</CardTitle>

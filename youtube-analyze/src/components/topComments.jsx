@@ -19,13 +19,14 @@ import { ChevronsUpDown, Plus, X } from "lucide-react";
 function TopComments({ comment }) {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
-    <div className="grid grid-cols-3 w-7/12 mt-4">
+    <div className="flex flex-col justify-center items-center lg:flex-row lg:flex-wrap lg:w-6/12 lg:mt-4">
+    {/*<div className="grid grid-cols-3 w-7/12 mt-4"> */}
       {Array.isArray(comment) &&
         comment.map(
           (commentObject, index) =>
             commentObject.language !== "en" && (
               <Card
-                className="flex flex-col justify-between m-1 border-2 border-slate-500"
+                className="flex flex-col w-1/2 justify-between m-1 border-2 border-slate-500 lg:w-1/4"
                 key={index + 1}
               >
                 <CardContent className="m-5 p-1/12">
@@ -35,7 +36,7 @@ function TopComments({ comment }) {
                   <CardDescription className="text-xs h-20 overflow-auto">
                     {commentObject.translatedText}
                   </CardDescription>
-                  <CardFooter className="flex justify-between gap-1 text-xs pb-1 mt-3">
+                  <CardFooter className="flex justify-center gap-1 text-xs pb-1 mt-3">
                     <Badge
                       className="w-auto cursor-default"
                       style={{ backgroundColor: "#fcd34d", color: "black" }}
