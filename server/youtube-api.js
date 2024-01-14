@@ -7,21 +7,28 @@ const youtube = google.youtube({
     auth: process.env.YOUTUBE_API_KEY,
 });
 
-
 const getComments = async (rawText) => {
     const videoId = rawText.params.videoId;
+    let pageToken
+    let commentList = [];
+    do {
         const response = await youtube.commentThreads.list({
         part: 'snippet',
         videoId: videoId,
-        maxResults: 100,
+        maxResults: 200,
+        pageToken: pageToken
       });
   
-      const commentList = response.data.items.map(item => ({
+      const commentsReturned = response.data.items.map(item => ({
         textDisplay: item.snippet.topLevelComment.snippet.textDisplay,
         likeCount: item.snippet.topLevelComment.snippet.likeCount,
       }));
-  
-      commentList.sort((a, b) => b.likeCount - a.likeCount);
+      
+      commentList = commentList.concat(commentsReturned);
+      pageToken = response.data.nextPageToken;
+    } while (pageToken);
+
+    commentList.sort((a, b) => b.likeCount - a.likeCount);
   
       return commentList;
 

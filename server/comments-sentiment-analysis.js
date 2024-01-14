@@ -11,6 +11,9 @@ const huggingSentiment = async (translatedText) => {
     if (element.language != "en") {
       sentences.push(element.translatedText);
     }
+    else {
+      sentences.push(element.text);
+    }
   }
   console.log(sentences);
 

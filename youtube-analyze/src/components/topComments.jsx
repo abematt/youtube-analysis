@@ -20,47 +20,44 @@ function TopComments({ comment }) {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <div className="flex flex-col justify-center items-center lg:flex-row lg:flex-wrap lg:w-6/12 lg:mt-4">
-    {/*<div className="grid grid-cols-3 w-7/12 mt-4"> */}
+      {/*<div className="grid grid-cols-3 w-7/12 mt-4"> */}
       {Array.isArray(comment) &&
-        comment.map(
-          (commentObject, index) =>
-            commentObject.language !== "en" && (
-              <Card
-                className="flex flex-col w-1/2 justify-between m-1 border-2 border-slate-500 lg:w-1/4"
-                key={index + 1}
-              >
-                <CardContent className="m-5 p-1/12">
-                  {/* <CardTitle className="text-s m-2">
+        comment.map((commentObject, index) => (
+          <Card
+            className="flex flex-col w-1/2 justify-between m-1 border-2 border-slate-500 lg:w-1/4"
+            key={index + 1}
+          >
+            <CardContent className="m-5 p-1/12">
+              {/* <CardTitle className="text-s m-2">
                 {index+1}
                 </CardTitle> */}
-                  <CardDescription className="text-xs h-20 overflow-auto">
-                    {commentObject.translatedText}
-                  </CardDescription>
-                  <CardFooter className="flex justify-center gap-1 text-xs pb-1 mt-3">
+              <CardDescription className="text-xs h-20 overflow-auto">
+                {commentObject.translatedText ? commentObject.translatedText : commentObject.text}
+              </CardDescription>
+              <CardFooter className="flex justify-center gap-1 text-xs pb-1 mt-3">
+                <Badge
+                  className="w-auto cursor-default"
+                  style={{ backgroundColor: "#fcd34d", color: "black" }}
+                >
+                  {commentObject.likes} Likes
+                </Badge>
+                <HoverCard>
+                  <HoverCardTrigger>
                     <Badge
-                      className="w-auto cursor-default"
-                      style={{ backgroundColor: "#fcd34d", color: "black" }}
+                      className="w-auto cursor-pointer"
+                      style={{ backgroundColor: "#84cc16", color: "black" }}
                     >
-                      {commentObject.likes} Likes
+                      {commentObject.translatedText ? 'Translated' : 'Original'}
                     </Badge>
-                    <HoverCard>
-                      <HoverCardTrigger>
-                        <Badge
-                          className="w-auto cursor-pointer"
-                          style={{ backgroundColor: "#84cc16", color: "black" }}
-                        >
-                          Original
-                        </Badge>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="bg-stone-950 text-white">
-                        {commentObject.text}
-                      </HoverCardContent>
-                    </HoverCard>
-                  </CardFooter>
-                </CardContent>
-              </Card>
-            )
-        )}
+                  </HoverCardTrigger>
+                  <HoverCardContent className="bg-stone-950 text-white">
+                    {commentObject.text}
+                  </HoverCardContent>
+                </HoverCard>
+              </CardFooter>
+            </CardContent>
+          </Card>
+        ))}
     </div>
 
     // <Collapsible

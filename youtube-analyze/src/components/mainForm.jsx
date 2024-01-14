@@ -48,9 +48,21 @@ function MainForm({
         return "Error";
       }
 
+      let timeoutId = setTimeout(() => {
+        setStatus("This might take a few seconds more");
+      }, 5000); // set timeout to 10 seconds
+
+      let timeoutId2 = setTimeout(() => {
+        setStatus("Phew!, That's a lot of comments");
+      }, 10000); // set timeout to 10 seconds
+
       const res = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/comments/${videoID}`
       );
+
+      clearTimeout(timeoutId)
+      clearTimeout(timeoutId2)
+
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
       if (res.status === 200) {
@@ -59,7 +71,7 @@ function MainForm({
         return text;
       }
     } catch (error) {
-      console.log(error);
+      setStatus("Youtube Comment Fetching Failed, Please Try Again!");
     }
   }
 
@@ -68,11 +80,18 @@ function MainForm({
     try {
       setStatus("Seperating Malayalam Comments");
       setProgress(40);
+      
+      let timeoutId = setTimeout(() => {
+        setStatus("Did you know Malayalam is believed to be 800 years old");
+      }, 5000); // set timeout to 5 seconds
 
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/classify`,
         data
       );
+
+      clearTimeout(timeoutId)
+
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
       if (res.status === 200) {
@@ -80,7 +99,7 @@ function MainForm({
         return res.data;
       }
     } catch (error) {
-      console.log(error);
+      setStatus("Language Classification Failed, Please Try Again!");
     }
   }
 
@@ -90,10 +109,17 @@ function MainForm({
       setStatus("Translating Comments");
       setProgress(70);
 
+      let timeoutId = setTimeout(() => {
+        setStatus("Translation is hard, Please wait till i find my dictionary");
+      }, 5000); // set timeout to 5 seconds
+
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/translate`,
         data
       );
+
+      clearTimeout(timeoutId)
+
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
       if (res.status === 200) {
@@ -101,7 +127,7 @@ function MainForm({
         return res.data;
       }
     } catch (error) {
-      console.log(error);
+      setStatus("Translation Failed, Please Try Again!");
     }
   }
 
@@ -110,19 +136,26 @@ function MainForm({
     try {
       setStatus("Analyzing Sentiment");
       setProgress(90);
+      
+      let timeoutId = setTimeout(() => {
+        setStatus("There's some emotions here that's for sure");
+      }, 5000); // set timeout to 5 seconds
 
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/sentiment`,
         data
       );
+      clearTimeout(timeoutId)
+
       console.log(`Status: ${res.status}`);
       console.log("Body: ", res.data);
       if (res.status === 200) {
+        setStatus("Done!");
         setSentiment(res.data);
         return res.data;
       }
     } catch (error) {
-      console.log(error);
+      setStatus("Sentiment Analysis Failed, Please Try Again!");
     }
   }
 
