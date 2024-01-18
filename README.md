@@ -1,4 +1,6 @@
-# Basic Pipeline
+# Youtube Analysis (Malayalam Language)
+
+This application will take a youtube link and process the comments from it. The processing pipeline involves fetching all comments , seperating them by english and non english, translating the non english comments (currently only Malayalam) and then putting together both english and translated comments to perform sentiment analysis. The language process is done leveraging Huggingface.js and Youtube Data APIs. 
 
 Deployed at: [https://main--effervescent-bombolone-b2ac4f.netlify.app/](https://main--effervescent-bombolone-b2ac4f.netlify.app/)
 
@@ -23,9 +25,8 @@ This app was created to explore various technologies and frameworks. The followi
 
 ## Limitations
 
-1. Currently, no real error handling or edge cases are managed (e.g., only accepting Malayalam videos)
-2. Sentiment detection is done only on 10 comments to avoid exceeding API usage limits
-3. Issues with detecting and translating transliterated sentences
+1. Sentiment detection is done only on 10 comments to avoid exceeding API usage limits
+2. Issues with detecting and translating transliterated sentences
 
 ## Main Takeaways
 
